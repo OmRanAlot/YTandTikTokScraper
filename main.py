@@ -9,22 +9,36 @@ from TikTokApi import TikTokApi
 
 ms_token = os.environ.get("dAIQI7YQlAxlPl_zFS9Zf22osbUFeqDvz-2KAqAGN4nv-vjwVTn1648xIknyD5K08uyrZj6z4LyVh-PUVmdjzA86Os_5_UTAvKYMkGx4fyyHLvN3aHZMYpdBM_yT2tiWRXgODbxIDGKEhzw=&X-Bogus=DFSzswVOy8cS4RbotLBquWRhGwUP", None) # get your own ms_token from your cookies on tiktok.com
 
+'''
+
+GOT A NOT IMPLEMENTED ERROR
+BRRUUUUUUUUUUUUUUUUUUH
+
+'''
 
 async def trending_videos():
     result = []
     async with TikTokApi() as api:
         await api.create_sessions(ms_tokens=[ms_token], num_sessions=1, sleep_after=3, headless=False)
-        async for video in api.hashtag(name='memes').videos(count=5):
-            result.append(video.as_dict)
+        async for x in api.hashtag(name='memes').videos(count=1):
+            result.append(x.as_dict)
+            print(type(x))
+            video_bytes = await x.bytes()
+
+            print(type(video_bytes))
+            with open("output/saved_video.mp4", 'wb') as file:
+                file.write(video_bytes)
+
+
         df = pd.DataFrame(result)
-        print(df["id"][0])
-        async for v in df["id"]:
-            video_bytes = api.video(id=v).bytes()
-            # Saving The Video
-            with open('saved_video.mp4', 'wb') as output:
-                output.write(video_bytes)
+        df.to_csv("output/output.csv")
+
+        
+          
+        
 
 if __name__ == "__main__":
     asyncio.run(trending_videos())
+    
 
 
